@@ -6,7 +6,7 @@ return [
     'allowed_origins' => [
         'http://localhost:5173/',
         'http://localhost:3000/',
-        'https://clone-netflis-challenge.netlify.app/', // Add your Netlify domain
+        'https://clone-netflis-challenge.netlify.app/',
     ],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
