@@ -33,7 +33,7 @@ class UserController extends Controller
             "password" => "required|string",
         ]);
 
-        if (!Auth::attempt($request->only("email", "password"))) {
+        if (! Auth::attempt($request->only("email", "password"))) {
             return response()->json([
                 "message" => "Invalid Email or Password",
             ], 401);
@@ -53,6 +53,6 @@ class UserController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json([
-        'message' => 'Logout Successfully']);
+            'message' => 'Logout Successfully']);
     }
 }
