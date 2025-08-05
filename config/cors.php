@@ -6,7 +6,11 @@ return [
     'allowed_origins' => [
         'http://localhost:5173',
         'http://localhost:3000',
-        'https://clone-netflis-challenge.netlify.app',
+        'http://localhost:5174',
+        'https://netflix-clone-lemon-nu-42.vercel.app',
+        'https://spontaneous-dragon-0b35f1.netlify.app/',
+        'https://*.netlify.app/',
+        'https://*.vercel.app/',
     ],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
