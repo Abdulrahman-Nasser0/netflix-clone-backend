@@ -1,33 +1,30 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate([
-            "name"     => "required|string|max:255",
-            "email"    => "required|string|email|max:100|unique:users,email",
-            "password" => "required|string|min:8|confirmed",
-        ]);
-        $user = User::create([
-            "name"     => $request->name,
-            "email"    => $request->email,
-            "password" => Hash::make($request->password),
-        ]);
+        $valData = $request->validated();
+        $user = User::create($valData);
         return response()->json([
-            'message' => 'User Registerd Successfully',
-            'User'    => $user,
+            'message'               => 'User Registerd Successfully',
+            'name'                  => $user->name,
+            'email'                 => $user->email,
+            'password'              => $user->password,
+            'password_confirmation' => $user->password,
         ], 201);
     }
 
     public function login(Request $request)
     {
+
         $request->validate([
             "email"    => "required|string|email",
             "password" => "required|string",
@@ -54,5 +51,17 @@ class UserController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json([
             'message' => 'Logout Successfully']);
+    }
+
+    public function user(ProfileRequest $request)
+    {
+        $userId  = Auth::user()->id;
+        $user    = User::findOrFail($userId);
+        $valdata = $request->validated();
+        $user->update($valdata);
+        return response()->json([
+            'message' => 'Profile Updated Successfully',
+            'user'    => $user,
+        ], 200);
     }
 }
