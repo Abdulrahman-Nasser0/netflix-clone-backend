@@ -37,13 +37,14 @@ console_command = "php /app/artisan tinker"
     hard_limit = 25
     soft_limit = 20
 
-  [[services.http_checks]]
-    interval = "15s"
-    timeout = "2s"
-    grace_period = "10s"
-    method = "GET"
-    path = "/"
-    protocol = "http"
+  # Disable health checks temporarily until database is connected
+  # [[services.http_checks]]
+  #   interval = "15s"
+  #   timeout = "2s"
+  #   grace_period = "10s"
+  #   method = "GET"
+  #   path = "/"
+  #   protocol = "http"
 
 [[vm]]
   memory = "1gb"
