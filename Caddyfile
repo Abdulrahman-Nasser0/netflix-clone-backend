@@ -1,10 +1,15 @@
 {
   admin off
+  # Ensure php_server runs before static file_server
+  order php_server before file_server
 }
 
 :8000 {
   root * /app/public
   encode zstd gzip
-  php_server
-  file_server
+
+  route {
+    php_server
+    file_server
+  }
 }
