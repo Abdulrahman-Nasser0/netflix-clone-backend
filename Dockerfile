@@ -8,8 +8,9 @@ WORKDIR /app
 # Copy composer files
 COPY composer.json composer.lock ./
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+# Install system dependencies (git, zip, unzip) and Composer
+RUN apk add --no-cache git zip unzip \
+	&& curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 	&& composer install --no-dev --optimize-autoloader --no-interaction
 
 # Copy the rest of the app
