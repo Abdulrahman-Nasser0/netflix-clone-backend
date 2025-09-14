@@ -1,23 +1,21 @@
-# Use FrankenPHP for Laravel (recommended by Fly.io)
-FROM dunglas/frankenphp:1.1.0-php8.3
+# Stage 1: build dependencies with Composer image (has git/zip)
+FROM composer:2 AS vendor
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --prefer-dist --no-progress --no-scripts
 
-# Set working directory
+# Stage 2: runtime using FrankenPHP
+FROM dunglas/frankenphp:1.1.0-php8.3
 WORKDIR /app
 
-
-# Copy composer files
-COPY composer.json composer.lock ./
-
-# Install system dependencies (git, zip, unzip) and Composer
-RUN apk add --no-cache git zip unzip \
-	&& curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-	&& composer install --no-dev --optimize-autoloader --no-interaction
-
-# Copy the rest of the app
+# Copy application code
 COPY . .
 
+# Copy vendor directory from builder stage
+COPY --from=vendor /app/vendor ./vendor
+
 # Ensure storage and bootstrap/cache are writable
-RUN chmod -R 775 storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache || true
 
 # Expose port 8000 (FrankenPHP default)
 EXPOSE 8000
